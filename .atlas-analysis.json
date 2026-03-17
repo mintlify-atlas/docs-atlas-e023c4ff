@@ -1,0 +1,79 @@
+{
+  "projectType": "saas",
+  "projectName": "Image to Alpha Pattern",
+  "projectDescription": "A browser-based tool that converts any image into a color-coded alpha pattern matrix, ready for crafts, cross-stitch, pixel art, and design use.",
+  "theme": "almond",
+  "primaryColor": "#6366f1",
+  "lightColor": "#eef2ff",
+  "darkColor": "#1e1b4b",
+  "navigation": {
+    "tabs": [
+      {
+        "tab": "Documentation",
+        "groups": [
+          {
+            "group": "Get Started",
+            "pages": ["introduction", "quickstart"]
+          },
+          {
+            "group": "Using the App",
+            "pages": [
+              "using-the-app/uploading-images",
+              "using-the-app/configuring-the-matrix",
+              "using-the-app/color-filters"
+            ]
+          },
+          {
+            "group": "Working with Patterns",
+            "pages": [
+              "working-with-patterns/pattern-preview",
+              "working-with-patterns/editing-patterns",
+              "working-with-patterns/palette-legend"
+            ]
+          },
+          {
+            "group": "Exporting",
+            "pages": [
+              "exporting/export-overview",
+              "exporting/export-formats"
+            ]
+          },
+          {
+            "group": "Reference",
+            "pages": [
+              "reference/faq",
+              "reference/browser-support"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "keyFeatures": [
+    "Upload images via drag-and-drop or file picker (JPG, PNG, WEBP)",
+    "Configurable grid matrix (columns × rows) with aspect ratio lock",
+    "Color similarity threshold to merge near-duplicate palette colors",
+    "Alpha/opacity threshold to ignore semi-transparent edge pixels",
+    "Interactive canvas preview with pan and zoom",
+    "Pencil tool for manual cell editing with full undo/redo history",
+    "Color palette legend with symbol labels (A–Z, AA–ZZ, …)",
+    "Export to PNG, Excel (.xlsx), Excel with color (.xls), CSV, Google Sheets (.xlsx), and HTML with color",
+    "Web Worker offloading keeps the UI responsive during heavy pixel processing",
+    "Fully client-side — no server required, no data leaves the browser"
+  ],
+  "publicApiSurface": [
+    "processImage(img, cols, rows, options) → { colorMatrix, paletteMap, symbolMatrix }",
+    "processImageAsync(img, cols, rows, options) → Promise<{ colorMatrix, paletteMap, symbolMatrix }>",
+    "toHex(r, g, b) → string",
+    "getTextColor(r, g, b) → '#000000' | '#ffffff'",
+    "indexToSymbol(index) → string",
+    "exportToPNG(patternData, patternConfig, filename?)",
+    "exportToExcel(patternData, patternConfig, filename?)",
+    "exportToExcelColored(patternData, patternConfig, filename?)",
+    "exportToCSV(patternData, patternConfig, filename?)",
+    "exportToCSVColored(patternData, patternConfig, filename?)",
+    "exportToGoogleSheetsColored(patternData, patternConfig, filename?)",
+    "ImageProvider — React context provider for global app state",
+    "useImage() — React hook exposing imageState, patternConfig, patternData, generatePattern, editOverlay, undo, redo, undoAll, redoAll"
+  ]
+}
