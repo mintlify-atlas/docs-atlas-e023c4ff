@@ -1,0 +1,142 @@
+---
+title: 'Export formats'
+description: 'Full specification for every export format: PNG, Excel, Excel with color, CSV, Google Sheets with color, and HTML with color.'
+keywords: ['png', 'xlsx', 'xls', 'csv', 'html', 'export', 'format', 'palette', 'color', 'google sheets']
+---
+
+The export panel offers six formats across three columns. Each format is described in full below.
+
+<Note>
+All formats include your pencil edits. `getMergedPatternData()` applies the edit overlay to the base pattern data before any file is written, so every export reflects the current state of the canvas.
+</Note>
+
+<AccordionGroup>
+  <Accordion title="PNG — alpha-pattern.png" icon="image">
+    **Exportar PNG** renders the full pattern onto a hidden `<canvas>` element and downloads it as a `.png` file.
+
+    **Cell sizing**
+
+    The cell size is calculated automatically to keep the longest edge of the exported image within 8,000 pixels, with a floor of 20 pixels per cell:
+
+    - Maximum canvas dimension: 8,000 px
+    - Minimum cell size: 20 px
+    - Actual cell size: largest value that satisfies both constraints given the pattern's column and row count
+
+    **Cell rendering**
+
+    Each filled cell is drawn as follows:
+
+    - Background rectangle filled with the cell's RGB color
+    - Grid outline: 0.22 opacity black stroke, 0.75 px line width
+    - Alpha symbol label centered on the cell in a contrasting color (black on light cells, white on dark cells), using a bold monospace font at `max(7, floor(cellSize × 0.46))` px
+
+    Transparent cells are rendered as a two-tone checkerboard using `#e0e0e0` and `#c0c0c0`.
+
+    **Best for:** sharing the pattern on social media or messaging apps, printing a physical reference, or attaching to a crafting project file.
+  </Accordion>
+
+  <Accordion title="Excel — alpha-pattern.xlsx" icon="table">
+    **Exportar Excel** produces a `.xlsx` workbook with two sheets using SheetJS with `cellStyles: true`.
+
+    **Sheet 1 — Patrón**
+
+    - Each spreadsheet cell contains the alpha symbol as a string value
+    - Cell background is filled with the corresponding color using SheetJS `cellStyles`
+    - Symbol text is bold, 8 pt, in a contrasting foreground color
+    - Column width: `wch: 4` (approximately 4 characters wide, producing square-ish cells in Excel)
+    - Row height: 20 pt
+    - Transparent cells are left empty with no fill
+
+    **Sheet 2 — Paleta**
+
+    Columns: **Símbolo** | **Color HEX** | **R** | **G** | **B**
+
+    Palette rows are sorted by symbol length first, then alphabetically within each length group — the same order used in the on-screen palette legend.
+
+    **Best for:** working directly in Excel, filtering and sorting the palette, or sharing an editable spreadsheet version of the pattern.
+  </Accordion>
+
+  <Accordion title="Excel with color — alpha-pattern-color.xls" icon="file-spreadsheet">
+    **Excel con color** exports an HTML file saved with a `.xls` extension. Excel and LibreOffice Calc detect the HTML structure and open it as a spreadsheet, rendering each cell with inline `background-color` styles.
+
+    This format exists as a workaround: the SheetJS community edition does not support writing `cellStyles` when the source is a plain `aoa_to_sheet` call without pro features, so color fidelity for the `.xlsx` route depends on your environment. The HTML-as-XLS approach guarantees colored cells in any spreadsheet app that can open HTML.
+
+    **Contents**
+
+    - Pattern table: one `<td>` per cell, sized 20×20 px, with `background-color`, `color`, `font-family: monospace`, and `font-weight: bold` inline styles
+    - Palette table: **Símbolo** | **Color HEX** | **R** | **G** | **B** | **Muestra** (a color-filled swatch cell)
+
+    <Warning>
+    This file is technically an HTML document saved with a `.xls` extension. Some antivirus tools and email filters may flag it as a file-type mismatch. If you need to share this file, consider renaming it to `.html` before attaching it, or use **Exportar Excel** (`.xlsx`) instead.
+    </Warning>
+
+    **Best for:** opening in Excel or LibreOffice Calc when you want full cell colors and the `.xlsx` route does not render them correctly in your version.
+  </Accordion>
+
+  <Accordion title="CSV — alpha-pattern.csv" icon="file-text">
+    **Exportar CSV** writes a plain-text `.csv` file with a UTF-8 BOM (`\uFEFF`) prepended so that Excel and Google Sheets detect the encoding automatically without a manual import step.
+
+    **File structure**
+
+    1. **Pattern section** (rows 1–N): the symbol matrix, one row per pattern row. Transparent cells are written as empty strings. Fields containing commas, quotes, or newlines are RFC 4180-escaped.
+    2. **Separator**: two blank rows
+    3. **Palette section**:
+       - Header: `--- PALETA DE COLORES ---`
+       - Column headers: `Símbolo,Color HEX,R,G,B`
+       - One data row per unique color, sorted by symbol length then alphabetically
+
+    **Best for:** data processing pipelines, importing into any spreadsheet app, counting colors programmatically, or archiving the raw symbol data.
+  </Accordion>
+
+  <Accordion title="Google Sheets with color — alpha-pattern-sheets.xlsx" icon="table-2">
+    **Google Sheets con color** produces a `.xlsx` workbook optimized for Google Sheets. It uses 8-character ARGB color encoding (for example, `FF3A7BC8`) instead of the 6-character RGB used by the standard Excel export, because Google Sheets and the OpenXML spec require the full-opacity prefix for cell fill colors to render correctly.
+
+    **Sheet 1 — Patrón**
+
+    - Colored cells with alpha symbol labels, identical layout to the Excel export
+    - Colors encoded as ARGB: `FF` prefix + uppercase `RRGGBB` (for example, `FF3A7BC8`)
+    - Column width: `wch: 4`; row height: 20 pt
+
+    **Sheet 2 — Paleta**
+
+    Columns: **Símbolo** | **Color HEX** | **R** | **G** | **B** | **Muestra**
+
+    The **Muestra** (swatch) column contains a `●` character in a cell filled and tinted with the corresponding color. Both the HEX column and the Muestra column receive the color fill; the other columns are unstyled.
+
+    **Best for:** collaborative crafting in Google Sheets, sharing a color-coded pattern with teammates, or using Google Sheets' built-in filtering and conditional formatting on top of the palette.
+  </Accordion>
+
+  <Accordion title="HTML with color — alpha-pattern-color.html" icon="code">
+    **HTML con color** exports a self-contained `.html` file with no external dependencies. Open it in any browser — no internet connection required.
+
+    **Appearance**
+
+    - Dark theme background: `#13131a`
+    - Pattern table: 20×20 px cells with `background-color`, contrasting `color`, and bold monospace symbol labels
+    - Transparent cells: CSS `repeating-conic-gradient` checkerboard pattern
+    - Palette table at the bottom with **Símbolo** | **HEX** | **R** | **G** | **B** | **Muestra** columns and alternating row shading
+
+    **Best for:** sharing the pattern via email or chat without requiring the recipient to have Excel or Google Sheets, viewing the pattern offline in a browser, or embedding a color reference in a project folder.
+  </Accordion>
+</AccordionGroup>
+
+## Format comparison
+
+| Format | File type | Cell colors | Palette included | Best for |
+|---|---|---|---|---|
+| PNG | `.png` | Rendered image | Embedded in cells | Sharing, printing |
+| Excel | `.xlsx` | SheetJS cellStyles | Sheet 2 (Paleta) | Excel editing |
+| Excel with color | `.xls` (HTML) | Inline CSS | Separate table | Excel/LibreOffice color |
+| CSV | `.csv` | None | Appended section | Data processing |
+| Google Sheets with color | `.xlsx` | ARGB fill | Sheet 2 (Paleta + swatch) | Google Sheets collaboration |
+| HTML with color | `.html` | Inline CSS | Inline table | Browser viewing, sharing |
+
+<Tip>
+Choose your format based on what you plan to do with the file:
+
+- **Print or share an image** → PNG
+- **Edit in Excel** → Excel (`.xlsx`) or Excel with color (`.xls`)
+- **Collaborate in Google Sheets** → Google Sheets with color
+- **Import into a script or count colors** → CSV
+- **Send to someone without a spreadsheet app** → HTML with color
+</Tip>

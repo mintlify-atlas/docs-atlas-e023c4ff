@@ -1,0 +1,52 @@
+---
+title: 'Pattern preview'
+description: 'Understand the interactive canvas that displays your generated pattern — what it renders, how to navigate it, and how symbols work.'
+keywords: ['pattern preview', 'canvas', 'zoom', 'pan', 'symbols', 'checkerboard', 'transparent cells', 'fit view']
+---
+
+After you click **Generate Pattern**, the pattern preview canvas displays your generated design as a grid of colored cells. Each cell carries a letter symbol that you use when crafting the physical pattern. The canvas is zoomable and pannable so you can inspect any part of the grid at any scale.
+
+<Note>
+The canvas always renders at an internal resolution of 900 × 560 px, regardless of your screen size or browser zoom level. This fixed resolution is then scaled down or up to fill its container, so the canvas looks crisp on all displays but the physical pixel density of your monitor has no effect on the grid itself.
+</Note>
+
+## What the canvas shows
+
+Each cell in the grid is filled with the averaged color from the corresponding region of your source image. Overlaid on that fill is a single letter symbol — A, B, C, and so on — that matches the symbol for that color in the palette legend. Together, the color fill and the symbol let you verify color assignments at a glance and follow the pattern when crafting.
+
+**Transparent cells** — cells where all sampled pixels fell below the alpha threshold — are shown as a dark checkerboard pattern instead of a solid color. This makes it easy to distinguish cells with no color from cells that happen to be very dark.
+
+Only the cells currently visible inside the canvas viewport are drawn on each frame. This frustum culling keeps rendering fast even on large grids with hundreds of rows and columns.
+
+## Navigating the canvas
+
+### Pan tool
+
+Select the **🖐 Mover** button in the toolbar to activate the pan tool. Click and drag anywhere on the canvas to scroll the view. The cursor changes to a grab hand while you drag.
+
+### Mouse wheel zoom
+
+Scroll up on the canvas to zoom in; scroll down to zoom out. Each scroll step multiplies the current zoom level by a fixed factor:
+
+| Direction | Factor per tick |
+|---|---|
+| Scroll up | × 1.12 |
+| Scroll down | × 0.893 |
+
+Zoom is anchored to the cursor position, so the cell under your pointer stays in place as the grid expands or contracts around it. The zoom range is **0.15× to 20×**.
+
+### Fit view button
+
+Click **Ajustar vista** in the top-right corner of the preview panel to reset the zoom and position so the entire pattern fits within the canvas at once. This is the same initial view you see right after generating a pattern.
+
+## Symbols
+
+Symbols are only drawn on a cell once it is rendered at 10 canvas pixels wide or larger. At low zoom levels — when cells are small — labels are hidden to keep the grid readable. Zoom in until individual cells are large enough to read their symbols.
+
+<Tip>
+Zoom in to the maximum level (20×) on areas where cells are similar in color to verify which symbol is assigned to each one. Small color differences that look identical at low zoom can be confirmed or corrected at high zoom.
+</Tip>
+
+## Generating vs. previewing
+
+The preview canvas only updates when you click **Generate Pattern**. Changing the matrix dimensions, color threshold, or any other setting does not automatically refresh the preview. Adjust your settings, then click **Generate Pattern** to see the result.

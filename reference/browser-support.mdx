@@ -1,0 +1,83 @@
+---
+title: 'Browser support'
+description: 'Which browsers and APIs are required to run Image to Alpha Pattern, and what happens in environments that lack full support.'
+sidebarTitle: 'Browser support'
+keywords: ['browser support', 'compatibility', 'web worker', 'offscreencanvas', 'safari', 'firefox', 'chrome', 'edge', 'mobile']
+---
+
+Image to Alpha Pattern runs entirely in the browser with no installation required. It works in any
+modern browser that supports the **Canvas API**, the **FileReader API**, and **ES modules**.
+
+## Required APIs
+
+The following browser APIs must be available for core functionality:
+
+| API | Purpose |
+|-----|---------|
+| `HTMLCanvasElement.getContext('2d')` | Renders the source image to read pixel data |
+| `FileReader` | Reads the selected image file as a Data URL |
+| `createImageBitmap` | Decodes the image off the main thread for transfer to the worker |
+| `URL.createObjectURL` | Creates download links for exported files |
+| `Blob` | Packages exported file content for download |
+
+## Web Worker and OffscreenCanvas
+
+When available, the app offloads all pixel processing to a **Web Worker** running on an
+**OffscreenCanvas**. The worker receives a transferable `ImageBitmap` (zero-copy), performs the full
+cell-averaging and color-merging computation off the main thread, then posts the result back. This
+keeps the UI responsive and allows the loading spinner to animate smoothly during processing.
+
+<Note>
+  If your browser does not support Web Workers or OffscreenCanvas, the app automatically falls back
+  to synchronous processing on the main thread. No configuration or user action is needed — the
+  fallback is transparent.
+</Note>
+
+### Fallback behavior
+
+When `Worker` or `OffscreenCanvas` is unavailable, `processImage()` runs synchronously on the main
+thread. For small grids this is imperceptible. For large grids (high column/row counts or large
+source images) the main thread may be blocked for several seconds, and the loading spinner may not
+animate during that time.
+
+## Compatibility table
+
+| Browser | Minimum version | Web Worker + OffscreenCanvas | Notes |
+|---------|-----------------|------------------------------|-------|
+| **Chrome** | 69+ | Full support | OffscreenCanvas available since Chrome 69 |
+| **Firefox** | 105+ | Full support | OffscreenCanvas enabled by default since Firefox 105 |
+| **Safari** | 16.4+ | Full support | OffscreenCanvas added in Safari 16.4; earlier versions use the synchronous fallback |
+| **Edge** | 79+ | Full support | Chromium-based; matches Chrome support |
+| **Opera** | 56+ | Full support | Chromium-based; matches Chrome support |
+
+<Note>
+  Browsers older than the versions listed above use the synchronous fallback automatically. The app
+  remains fully functional; only the smoothness of the loading animation is affected for large grids.
+</Note>
+
+## Mobile browsers
+
+<Warning>
+  The app has no touch event handlers. Pan and zoom in the pattern preview use mouse events only,
+  which means those interactions do not work on touchscreen devices. The upload, settings, and export
+  controls are usable on mobile, but the overall layout is not optimized for small screens.
+</Warning>
+
+## Private and incognito mode
+
+The app works normally in private and incognito browsing sessions. It does not use `localStorage`,
+`sessionStorage`, `IndexedDB`, or cookies. No data persists between sessions.
+
+## Accessibility
+
+The file upload drop zone is keyboard-accessible: it has `role="button"` and
+`aria-label="Zona de carga de imagen"`, and responds to the **Enter** key to open the file picker.
+Basic ARIA labels are present throughout the interface. Full screen-reader coverage has not been
+audit-tested.
+
+## File size limits
+
+There is no explicit file size limit enforced by the app. The practical limit is the memory
+available to the browser tab. Very large images (tens of megapixels) may cause the tab to run out
+of memory on devices with limited RAM. If processing fails silently for a large file, try a
+smaller or more compressed version of the image.

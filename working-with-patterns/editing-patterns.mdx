@@ -1,0 +1,78 @@
+---
+title: 'Editing patterns'
+description: 'Use the pencil tool to repaint individual cells, then undo or redo strokes to refine your edits.'
+keywords: ['pencil', 'paint', 'edit', 'undo', 'redo', 'stroke', 'color', 'cells', 'toolbar']
+---
+
+After generating a pattern you can repaint individual cells directly on the canvas using the pencil tool. This lets you fix color mismatches, smooth edges, or make small corrections without regenerating the entire pattern.
+
+<Tip>
+The pencil tool is ideal for touching up small color mismatches caused by JPEG compression artifacts or anti-aliased edges — situations where regenerating with a different threshold would affect the whole pattern but only a handful of cells need changing.
+</Tip>
+
+## Switching tools
+
+The toolbar above the canvas contains two tool buttons:
+
+- **🖐 Mover** — activates the pan tool. Click and drag to scroll the canvas; no cells are painted.
+- **✏️ Lápiz** — activates the pencil tool. The cursor becomes a crosshair, and clicking or dragging paints cells.
+
+Click either button to switch between them at any time.
+
+## Selecting a paint color
+
+When the pencil tool is active, a color palette row appears in the toolbar next to the tool buttons. It contains:
+
+- A **checkerboard swatch** as the first option — select this to paint cells as transparent (no color).
+- One **colored swatch per palette entry**, each showing the symbol for that color. Swatches are displayed in palette order.
+
+Click any swatch to make it the active paint color. The selected swatch shows a white ring to indicate it is active.
+
+## Painting cells
+
+With the pencil tool selected and a paint color chosen:
+
+- **Click** a cell to paint it with the active color.
+- **Click and drag** across the canvas to paint multiple cells in a single stroke.
+- Painting outside the grid boundaries has no effect.
+- Each painted cell immediately updates to show the new color and symbol.
+
+One complete stroke — from mouse-down to mouse-up — is recorded as a single undo entry, regardless of how many cells it covers.
+
+### Editing a single cell step by step
+
+<Steps>
+  <Step title="Select the pencil tool">
+    Click **✏️ Lápiz** in the toolbar. The cursor changes to a crosshair over the canvas.
+  </Step>
+  <Step title="Choose a paint color">
+    Click the swatch in the palette row that corresponds to the color you want to apply. The selected swatch gains a white ring.
+  </Step>
+  <Step title="Click the target cell">
+    Click the cell you want to repaint. It immediately fills with the new color and shows the symbol for the color you selected.
+  </Step>
+  <Step title="Verify the change">
+    Zoom in if needed to confirm the symbol and color are correct. If the result is wrong, click **↩** to undo the stroke.
+  </Step>
+</Steps>
+
+## Undo and redo
+
+The toolbar provides four history controls, all grouped to the right:
+
+| Button | Action |
+|---|---|
+| **⏮** | Undo all — reverts every stroke at once |
+| **↩ N** | Undo — reverts the most recent stroke; shows the count of available undos |
+| **↪ N** | Redo — re-applies the most recently undone stroke; shows the count of available redos |
+| **⏭** | Redo all — re-applies every undone stroke at once |
+
+The counts next to **↩** and **↪** update as you paint and undo, so you always know how many steps are available in each direction.
+
+<Warning>
+Clicking **Generate Pattern** resets the edit overlay and clears the entire undo and redo history. Any pencil edits you made to the previous pattern are permanently discarded when a new pattern is generated. If you want to keep your edits, export the pattern before regenerating.
+</Warning>
+
+## Edits appear in exports
+
+All exported files reflect your pencil edits. The export system merges the edit overlay into the base pattern data before writing any file, so the colors and symbols you painted are included in every format you export.

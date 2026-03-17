@@ -1,0 +1,57 @@
+---
+title: 'Introduction'
+description: 'Learn what Image to Alpha Pattern does, how it works, and who it is for.'
+keywords: ['cross-stitch', 'pixel art', 'alpha pattern', 'color matrix', 'craft pattern', 'bead art']
+---
+
+Image to Alpha Pattern converts any photograph or graphic into a **color-coded grid matrix** — the format used by crafters to plan cross-stitch embroidery, bead art, and pixel art projects. You upload an image, set your grid dimensions, and the app divides the image into cells, averages the color of each cell, assigns every unique color a letter symbol, and renders an interactive pattern you can edit and export.
+
+<Note>
+  All processing happens entirely in your browser. No image data, personal information, or pattern output is ever sent to a server. There is no account to create and nothing to install.
+</Note>
+
+## What the app does
+
+The app takes an ordinary image — a photo, logo, illustration, or any graphic — and transforms it into a matrix where every cell carries an averaged color and a short letter code (A, B, C … Z, AA, AB …). This matrix is what crafters call an **alpha pattern**: a grid you can follow stitch by stitch, bead by bead, or pixel by pixel to recreate the image in a physical or digital medium.
+
+The workflow from upload to finished export looks like this:
+
+1. **Upload** — drag and drop or browse to a JPG, PNG, or WEBP image.
+2. **Configure** — choose the number of columns and rows; optionally lock the aspect ratio so the grid stays proportional to the original image.
+3. **Generate** — click **Generate Pattern** and a Web Worker processes the image in the background, keeping the interface responsive.
+4. **Edit** — use the **Pencil** tool to repaint individual cells; undo and redo changes as needed.
+5. **Export** — download the finished pattern as a PNG image, an Excel workbook, a CSV file, a Google Sheets workbook, or an HTML page.
+
+## The technology
+
+Image to Alpha Pattern is a fully client-side React application built with **Vite** and styled with **Tailwind CSS**. There is no backend server, no database, and no authentication system. The image processing — pixel averaging, color deduplication, and symbol assignment — runs in a **Web Worker** so the browser UI stays responsive even for large grids.
+
+Because everything runs locally in your browser, the app works offline once loaded and never requires an account or network connection to process your images.
+
+## Who it is for
+
+Image to Alpha Pattern is designed for:
+
+- **Cross-stitch and embroidery enthusiasts** who want to turn a favorite photo or design into a stitchable grid pattern.
+- **Bead artists** working in Perler, Hama, or similar bead systems who need a grid with a manageable color palette.
+- **Pixel artists** who want to derive a pixelated version of an image with automatically assigned color codes.
+- **Designers and educators** who want a quick way to produce color-coded grid references from any source image.
+
+No design software experience is required. If you can drag a file onto a web page, you can use this app.
+
+## Explore the docs
+
+<CardGroup cols={2}>
+  <Card title="Quickstart" icon="rocket" href="/quickstart">
+    Go from a blank page to a finished exported pattern in under five minutes.
+  </Card>
+  <Card title="Uploading images" icon="image" href="/using-the-app/uploading-images">
+    Learn which file formats are supported and how the drop zone works.
+  </Card>
+  <Card title="Configuring the matrix" icon="table-cells" href="/using-the-app/configuring-the-matrix">
+    Set columns, rows, cell size, and aspect ratio lock for your grid.
+  </Card>
+  <Card title="Exporting your pattern" icon="download" href="/exporting/export-overview">
+    Choose from PNG, Excel, CSV, Google Sheets, and HTML export formats.
+  </Card>
+</CardGroup>

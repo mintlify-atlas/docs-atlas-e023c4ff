@@ -1,0 +1,52 @@
+---
+title: 'Palette legend'
+description: 'Understand the palette legend — how symbols are assigned and sorted, what the color count means, and when to reduce your palette.'
+keywords: ['palette', 'legend', 'symbols', 'color count', 'swatch', 'hex', 'crafting', 'color threshold']
+---
+
+The **Palette legend** panel appears below the pattern preview after you generate a pattern. It lists every unique color in the pattern, each paired with a letter symbol, a colored swatch, and a hex code. When you craft the physical pattern, the legend is your key: match the symbol on each cell to the corresponding color in the legend.
+
+## What each entry shows
+
+Every row in the legend represents one color in the pattern and contains:
+
+- **Symbol** — a short letter label such as `A`, `B`, or `AA`. The symbol on a palette entry matches exactly the symbol shown on every cell of that color in the pattern grid.
+- **Colored swatch** — a small square filled with the actual color, with the symbol text overlaid.
+- **Hex code** — the six-character hex value of the color, for example `#3a7bc8`.
+
+The panel header shows the total count as **N unique colors**.
+
+## Symbol order
+
+Symbols are assigned sequentially using the `indexToSymbol` function and sorted in the legend by length first, then alphabetically within each length group:
+
+```
+A, B, C … Z, AA, AB, AC … AZ, BA, BB … BZ, CA …
+```
+
+This means all single-letter symbols appear before any two-letter symbols, and two-letter symbols appear before three-letter ones. Within each group the order is strictly alphabetical. The sorting makes the legend predictable: if you are looking for symbol `B`, it is always near the top; `BA` is always after all single-letter entries.
+
+<Note>
+The total number of palette entries depends directly on your matrix resolution and color similarity threshold. A finer grid (more columns and rows) samples more distinct color regions, which typically produces a larger palette. A higher color threshold merges similar colors and reduces the count. See [Color filters](/using-the-app/color-filters) for details on controlling palette size.
+</Note>
+
+## Large palette warning
+
+If the pattern contains more than 80 unique colors, the legend displays a yellow warning:
+
+> ⚠ Paleta muy grande (N colores). Considera reducir la resolución de la matriz para obtener un patrón más manejable.
+
+A palette this large is difficult to work with when crafting — sourcing 80 or more distinct thread or bead colors is impractical for most projects. When you see this warning, consider:
+
+- Reducing the matrix resolution (fewer columns and rows) so each cell covers a larger area and averages out more color variation.
+- Increasing the color similarity threshold to merge near-identical colors into a single palette entry.
+
+<Tip>
+Start by raising the **Color similarity threshold** before reducing the grid size. Threshold adjustments collapse similar colors without changing the detail level of the grid, so you keep the same spatial resolution while shrinking the palette. Aim for 20–40 unique colors for most practical crafting projects. See [Color filters](/using-the-app/color-filters) for guidance on threshold values.
+</Tip>
+
+## How the legend maps to the pattern
+
+Every cell in the pattern grid displays the symbol of whichever palette entry was assigned to it. The symbol in the grid and the symbol in the legend are always the same string, so you can cross-reference them directly. Use the legend as a shopping list when selecting materials and as a reference guide when working through the pattern row by row.
+
+The R, G, and B channel values for each palette color are also included in exported files alongside the hex code. For details on how palette data is structured in each export format, see [Export formats](/exporting/export-formats).

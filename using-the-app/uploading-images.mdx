@@ -1,0 +1,63 @@
+---
+title: 'Uploading images'
+description: 'How to load an image into the app and what happens once you do.'
+keywords: ['upload', 'drag and drop', 'file browser', 'supported formats', 'JPG', 'PNG', 'WEBP']
+---
+
+You can load an image into Image to Alpha Pattern in two ways: by dragging a file onto the drop zone, or by clicking the drop zone to open your system file browser. Both methods reach the same result.
+
+## Supported formats
+
+The app accepts the following image types:
+
+- **JPG / JPEG** (`image/jpeg`)
+- **PNG** (`image/png`)
+- **WEBP** (`image/webp`)
+
+Formats such as GIF, SVG, TIFF, BMP, and AVIF are not supported. If you drop an unsupported file, a red error banner appears immediately and tells you the specific type that was rejected.
+
+<Tip>
+High-contrast images — where the subject is clearly distinguishable from the background — produce the cleanest patterns. Flat-color illustrations and bold photography tend to work better than soft, low-contrast photos.
+</Tip>
+
+<Note>
+PNG files may contain an alpha (transparency) channel. The app preserves and uses that channel when averaging cell colors. You can control how transparent pixels are handled with the **Alpha threshold** slider on the pattern configuration panel.
+</Note>
+
+## Upload workflow
+
+<Steps>
+  <Step title="Open the upload screen">
+    When no image is loaded, the app shows the upload screen centered in the browser window. You will see the drop zone with a dashed border and the labels **Drag your image here** and **click to select**.
+  </Step>
+  <Step title="Load your file">
+    **Drag and drop:** Drag an image file from your file manager or desktop and release it anywhere over the drop zone. The border highlights in indigo while you hold the file above it.
+
+    **File browser:** Click anywhere on the drop zone. Your system file picker opens, filtered to `.jpg`, `.jpeg`, `.png`, and `.webp` files. Select a file to confirm.
+  </Step>
+  <Step title="Wait for decoding">
+    The app reads the file using the browser's `FileReader` API, decodes it into an `HTMLImageElement` to obtain the natural pixel dimensions, and stores a DataURL in memory. A spinner labeled **Processing image…** appears inside the drop zone during this step.
+  </Step>
+  <Step title="Review the file info">
+    Once the image is loaded, the workspace opens. The header shows the filename (truncated if it is long) and the resolution — for example, **1200 × 800 px**.
+  </Step>
+  <Step title="Configure and generate">
+    Adjust the matrix size and color filters in the side panel, then click **Generate Pattern** to produce the alpha pattern grid.
+  </Step>
+</Steps>
+
+## Error handling
+
+If you drop or select a file with an unsupported type, the drop zone stays visible and a red banner appears below it showing the rejected MIME type — for example:
+
+> Unsupported file type: "image/gif". JPG, PNG, and WEBP are accepted.
+
+No action is needed other than selecting a supported file.
+
+## Loading a different image
+
+To replace the current image at any time, click **← Load another image** in the top-left of the workspace header. This clears the current pattern and returns you to the upload screen.
+
+## Privacy
+
+Your files are never sent to a server. The entire process — reading, decoding, and pattern generation — happens locally in your browser. No image data leaves your device.

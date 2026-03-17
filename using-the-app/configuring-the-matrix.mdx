@@ -1,0 +1,59 @@
+---
+title: 'Configuring the matrix'
+description: 'Set the grid dimensions and aspect ratio to control the resolution of your alpha pattern.'
+keywords: ['matrix', 'columns', 'rows', 'grid size', 'aspect ratio', 'cell size', 'pattern resolution']
+---
+
+The matrix is the cols × rows grid that the app lays over your image. Each cell in the grid captures the average color of the image region it covers. The matrix dimensions directly control how detailed or simplified the resulting pattern is.
+
+## Columns and rows
+
+The **Columns (N)** and **Rows (M)** inputs in the **Configure Matrix** panel set the grid dimensions:
+
+- **Columns (N)** — the number of horizontal divisions. Accepts values from 1 to 500. Default is **50**.
+- **Rows (M)** — the number of vertical divisions. Accepts values from 1 to 500. Default is **auto-calculated from the image's aspect ratio** when you first load an image.
+
+For example, if you load a 1200 × 800 px image and leave columns at 50, the app sets rows to 33 (`round(50 × 800 / 1200)`).
+
+## Keep original proportions
+
+The **Keep original proportions** checkbox locks the aspect ratio between columns and rows. When it is checked:
+
+- Changing **Columns (N)** automatically recalculates **Rows (M)**.
+- Changing **Rows (M)** automatically recalculates **Columns (N)**.
+
+The checkbox is **enabled by default** every time you load a new image. You can uncheck it to set columns and rows independently.
+
+## Cell size preview
+
+Below the inputs, the panel shows a live preview line:
+
+> Cell size: X × Y px · N total cells
+
+This tells you the pixel region each cell covers on the original image. Smaller cells mean more detail; larger cells mean a more simplified pattern. The total cell count is `cols × rows`.
+
+## Choosing a grid size
+
+The right grid size depends on what you plan to do with the pattern:
+
+| Use case | Recommended grid width | Notes |
+|---|---|---|
+| Cross-stitch (small hoop) | 20–50 columns | Keeps the stitch count manageable and limits palette size |
+| Bead art | 30–80 columns | Beads come in limited colors; a smaller grid maps better to available shades |
+| Pixel art (screen display) | 64–200 columns | More columns give sharper pixel-art fidelity |
+| Large print / poster | 100–500 columns | High detail; expect a large palette and many symbols |
+
+<Tip>
+Start with a small grid (20–50 columns) and gradually increase it until the level of detail looks right. It is much easier to increase than to simplify a complex pattern after the fact.
+</Tip>
+
+## Color count trade-offs
+
+Every additional cell has a chance to introduce a new average color, which adds an entry to the palette:
+
+- **Fewer cells** → fewer averaged colors → smaller, simpler palette → easier to follow when crafting.
+- **More cells** → more averaged colors → larger palette → more symbols and potentially more thread or bead colors to source.
+
+<Warning>
+Grids larger than approximately 100 × 100 cells can produce palettes with 80 or more distinct colors. The app displays a warning when the palette reaches that threshold. At that scale, patterns can become difficult to follow in practice — consider using the **Color similarity threshold** filter to reduce the palette after generating.
+</Warning>

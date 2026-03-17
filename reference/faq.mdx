@@ -1,0 +1,119 @@
+---
+title: 'Frequently asked questions'
+description: 'Answers to common questions about Image to Alpha Pattern.'
+sidebarTitle: 'FAQ'
+keywords: ['faq', 'alpha pattern', 'image processing', 'export', 'browser', 'privacy']
+---
+
+<AccordionGroup>
+  <Accordion title="Does the app send my images to a server?">
+    No. Everything runs locally in your browser. When you drop or select a file, the browser reads it
+    using the [FileReader API](https://developer.mozilla.org/en-US/docs/Web/API/FileReader) and decodes
+    the pixel data onto an `OffscreenCanvas` inside a Web Worker. No image data, no pattern data, and
+    no settings are transmitted over the network at any point. There is no backend.
+  </Accordion>
+
+  <Accordion title="What image formats are supported?">
+    The app accepts **JPG/JPEG**, **PNG**, and **WEBP** files. GIF, SVG, TIFF, BMP, and all other
+    formats are rejected before the file is loaded. The MIME type (`image/jpeg`, `image/png`,
+    `image/webp`) is validated immediately after you select or drop a file; an error message appears
+    if the type is not recognised.
+  </Accordion>
+
+  <Accordion title="How do I get fewer colors in my palette?">
+    Two controls reduce the number of unique colors:
+
+    - **Color similarity threshold** (0–50 %): Colors within this RGB distance of an already-seen
+      color are merged into a single representative. A value of 0 keeps every distinct averaged color;
+      higher values merge more aggressively. After merging, symbols are reassigned from A onward.
+    - **Grid size** (columns × rows): A smaller grid means each cell averages over a larger region of
+      the source image, naturally producing fewer distinct averaged colors.
+
+    Try increasing the **Color similarity threshold** slider first, then reduce the grid dimensions
+    if you need an even smaller palette.
+  </Accordion>
+
+  <Accordion title="Why are there strange fringe colors at the edges of my pattern?">
+    This usually happens when your PNG has semi-transparent edge pixels caused by anti-aliasing. The
+    processor averages only the pixels whose alpha channel exceeds the current **Alpha threshold**. If
+    that threshold is 0 %, even near-invisible fringe pixels contribute to the cell average, blending
+    their color with the fully opaque content.
+
+    Increase the **Alpha threshold** slider to exclude pixels below a chosen opacity level. A value
+    around 10–20 % eliminates most anti-aliased edges without affecting solid content.
+  </Accordion>
+
+  <Accordion title="Can I edit the generated pattern?">
+    Yes. After a pattern is generated, switch to the **Pencil tool** in the pattern preview toolbar.
+    Click or drag across cells to paint them with any color from the palette, or mark them as
+    transparent. Every completed stroke is recorded as a single undo entry.
+
+    Use **Ctrl+Z** (or the undo button) to step backward and **Ctrl+Y** (or the redo button) to step
+    forward. You can also undo or redo all changes at once using the corresponding toolbar buttons.
+  </Accordion>
+
+  <Accordion title="What happens if I generate a new pattern?">
+    Generating a new pattern clears all pencil edits and resets the entire undo/redo history. The
+    grid settings (columns, rows, **Color similarity threshold**, **Alpha threshold**) are preserved
+    so you can tweak a parameter and regenerate without re-entering your configuration.
+  </Accordion>
+
+  <Accordion title="Why don't I see symbols on the cells?">
+    Symbols are only rendered when a cell is at least **10 canvas pixels wide** in the live preview.
+    If your grid is dense or the preview panel is small, zoom in until symbols become visible.
+
+    The exported PNG always renders each cell at a minimum of 20 pixels wide (and scales up to keep
+    the longest edge within 8,000 px), so symbols are always legible in the downloaded file
+    regardless of zoom level.
+  </Accordion>
+
+  <Accordion title="What's the difference between the Excel export formats?">
+    There are two Excel-compatible exports:
+
+    - **`alpha-pattern.xlsx`**: A real Office Open XML workbook generated with SheetJS. It uses
+      SheetJS cell styles to apply a color fill to every cell. This file opens correctly in Microsoft
+      Excel and LibreOffice Calc.
+    - **`alpha-pattern-color.xls`**: Despite the `.xls` extension, this file is actually an HTML
+      document that Excel and LibreOffice Calc can interpret as a spreadsheet with inline background
+      colors. It may trigger a security warning about a file type mismatch between the extension and
+      the actual content — this is expected and safe to dismiss.
+
+    Use `alpha-pattern.xlsx` when you need a genuine spreadsheet file. Use `alpha-pattern-color.xls`
+    if you encounter display issues with cell colors in the `.xlsx` version.
+  </Accordion>
+
+  <Accordion title="The export file is very large — how can I reduce it?">
+    File size is proportional to the number of cells and the number of unique colors in the palette:
+
+    - **Reduce grid size**: Fewer columns and rows mean fewer cells and a smaller file.
+    - **Increase the Color similarity threshold**: A smaller palette reduces the metadata embedded in
+      Excel and PNG exports.
+    - **PNG size specifically**: The exported PNG scales cells so the longest edge stays within
+      8,000 px. A grid with many columns or rows at that maximum produces a very large pixel canvas.
+      Reducing the grid is the most effective way to shrink the PNG.
+  </Accordion>
+
+  <Accordion title="Does the app work offline?">
+    Yes. Once the page has loaded in your browser, it works without an internet connection. All image
+    decoding, pixel processing, pattern generation, and file export happen locally using browser APIs.
+    No network request is made during any of these steps.
+  </Accordion>
+
+  <Accordion title="What is the maximum grid size?">
+    The grid supports up to **500 columns × 500 rows** (250,000 cells). Very large grids can produce
+    hundreds of unique colors — especially from photographs — and may take several seconds to process
+    even with Web Worker acceleration. If performance is a concern, start with a smaller grid and
+    scale up as needed.
+  </Accordion>
+
+  <Accordion title="How are letter symbols assigned?">
+    The image is scanned **left-to-right, top-to-bottom** across all cells. The first unique averaged
+    color encountered is assigned **A**, the second **B**, and so on through **Z**. The sequence then
+    continues as **AA**, **AB**, …, **AZ**, **BA**, and so forth — the same scheme spreadsheet
+    applications use for column labels.
+
+    If you enable the **Color similarity threshold**, colors are merged after the initial scan. After
+    merging, symbols are reassigned from A onward to the surviving representative colors, so the final
+    symbol set is always compact and starts at A.
+  </Accordion>
+</AccordionGroup>

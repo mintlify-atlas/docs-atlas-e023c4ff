@@ -1,0 +1,37 @@
+---
+title: 'Export overview'
+description: 'Download your alpha pattern as a PNG, Excel workbook, or CSV file directly from the browser — no server required.'
+keywords: ['export', 'download', 'png', 'excel', 'csv', 'pattern', 'export panel']
+---
+
+Once you have generated a pattern, the **Exportar Patrón** panel appears below the preview. It gives you six export options organized into three columns. All exports happen entirely in the browser: files are built in memory and downloaded through a temporary `<a>` element — no data is sent to a server.
+
+<Note>
+All exports reflect your latest pencil edits. Before writing any file, the export system calls `getMergedPatternData()`, which merges the edit overlay into the base pattern data. Every color and symbol you painted is included in every format you export.
+</Note>
+
+## When the panel appears
+
+The export panel is conditional: it renders only when `patternData` is non-null, meaning a pattern has been generated at least once. If you have not yet clicked **Generate Pattern**, the panel is hidden. Generate a pattern first, then scroll down to find the export options.
+
+## Panel layout
+
+The panel is divided into three columns. Each column has a primary export button at the top, and the Excel and CSV columns include one or two additional color-variant buttons below.
+
+<Columns cols={3}>
+  <Card title="PNG" icon="image">
+    Exports a single high-resolution canvas image. Best for sharing, printing, and using as a visual reference while you craft.
+  </Card>
+  <Card title="Excel" icon="table">
+    Exports a `.xlsx` workbook with two sheets (pattern and palette), plus an optional `.xls` file with full cell colors for spreadsheet apps that support HTML-as-XLS.
+  </Card>
+  <Card title="CSV" icon="file-text">
+    Exports a plain CSV symbol matrix with an embedded palette, a Google Sheets-optimized `.xlsx` with ARGB colors, or a self-contained HTML file for browser viewing.
+  </Card>
+</Columns>
+
+For the full specification of every file format — including cell dimensions, color encoding, sheet structure, and palette sort order — see [Export formats](/exporting/export-formats).
+
+## Loading state
+
+While an export is running, a **Generando archivo…** pulse indicator appears in the panel header and all six export buttons are disabled. This prevents concurrent exports from overwriting each other or causing memory issues. The buttons re-enable automatically once the file download starts.

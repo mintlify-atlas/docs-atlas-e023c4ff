@@ -1,80 +1,128 @@
 ---
 title: "Quickstart"
-description: "Start building awesome documentation in minutes"
+description: "Upload your first image and generate an alpha pattern in under a minute."
 ---
 
-## Get started in three steps
+Follow these steps to go from a raw image to an exported alpha pattern.
 
-Get your documentation site running locally and make your first customization.
+<Steps>
+  <Step title="Open the app">
+    Navigate to the Image to Alpha Pattern app in your browser. You'll see the upload screen — a dark drop zone with "Drag your image here" in the center.
 
-### Step 1: Set up your local environment
+    <Tip>
+      The app works entirely offline once loaded. You do not need an internet connection to process images.
+    </Tip>
+  </Step>
 
-<AccordionGroup>
-  <Accordion icon="copy" title="Clone your docs locally">
-    During the onboarding process, you created a GitHub repository with your docs content if you didn't already have one. You can find a link to this repository in your [dashboard](https://dashboard.mintlify.com).
-    
-    To clone the repository locally so that you can make and preview changes to your docs, follow the [Cloning a repository](https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository) guide in the GitHub docs.
-  </Accordion>
-  <Accordion icon="rectangle-terminal" title="Start the preview server">
-    1. Install the Mintlify CLI: `npm i -g mint`
-    2. Navigate to your docs directory and run: `mint dev`
-    3. Open `http://localhost:3000` to see your docs live!
-    
-    <Tip>Your preview updates automatically as you edit files.</Tip>
-  </Accordion>
-</AccordionGroup>
+  <Step title="Upload your image">
+    Load your image in one of two ways:
 
-### Step 2: Deploy your changes
+    - **Drag and drop** your file directly onto the drop zone — it highlights in indigo when you hover over it.
+    - **Click the drop zone** (or press Enter when it's focused) to open the system file browser.
 
-<AccordionGroup>
-  <Accordion icon="github" title="Install our GitHub app">
-    Install the Mintlify GitHub app from your [dashboard](https://dashboard.mintlify.com/settings/organization/github-app).
-    
-    Our GitHub app automatically deploys your changes to your docs site, so you don't need to manage deployments yourself.
-</Accordion>
-<Accordion icon="palette" title="Update your site name and colors">
-    For a first change, let's update the name and colors of your docs site.
+    Accepted formats: **JPG**, **JPEG**, **PNG**, **WEBP**.
 
-    1. Open `docs.json` in your editor.
-    2. Change the `"name"` field to your project name.
-    3. Update the `"colors"` to match your brand.
-    4. Save and see your changes instantly at `http://localhost:3000`.
+    <Info>
+      PNG files with transparency are fully supported. Use the alpha threshold filter later to clean up semi-transparent edges.
+    </Info>
 
-    <Tip>Try changing the primary color to see an immediate difference!</Tip>
-  </Accordion>
-</AccordionGroup>
+    A loading spinner appears while the image is decoded. Once done, the workspace opens automatically.
+  </Step>
 
-### Step 3: Go live
+  <Step title="Review your image info">
+    The left sidebar shows a thumbnail of your original image along with:
 
-<Accordion icon="rocket" title="Publish your docs">
-  1. Commit and push your changes.
-  2. Your docs will update and be live in moments!
-</Accordion>
+    - **Archivo** — the filename (truncated if long)
+    - **Resolución** — the natural dimensions, e.g. `1200 × 800 px`
+
+    This information helps you choose the right matrix size in the next step.
+  </Step>
+
+  <Step title="Configure the matrix">
+    In the **Configurar Matriz** panel, set the grid dimensions:
+
+    | Setting | Default | Range |
+    |---------|---------|-------|
+    | **Columns (N)** | 50 | 1–500 |
+    | **Rows (M)** | auto (aspect ratio) | 1–500 |
+
+    Enable **Keep original proportions** (checked by default) to automatically recalculate rows when you change columns, and vice versa.
+
+    The cell size preview below the inputs shows how many image pixels map to each grid cell, e.g. `Cell size: 24.0 × 16.0 px · 2500 cells total`.
+
+    <Tip>
+      Start with 30–50 columns for a simple craft-friendly pattern. Increase to 100+ for detailed pixel art.
+    </Tip>
+  </Step>
+
+  <Step title="Apply color filters (optional)">
+    Expand the **Filtros de Color** section to reduce palette complexity:
+
+    - **Color similarity threshold** (0–50 %): merges colors that are close in RGB space. Set to 5–15 % to eliminate near-duplicate shades from photos.
+    - **Alpha threshold** (0–100 %): ignores pixels below this opacity. Useful for PNG images with soft anti-aliased edges.
+
+    Leave both at 0 % to start. You can regenerate after adjusting.
+  </Step>
+
+  <Step title="Generate the pattern">
+    Click **Generate Pattern**. A spinner appears while the image is processed — pixel averaging runs in a Web Worker so the page stays responsive.
+
+    Once complete, the right panel shows:
+
+    - The pattern canvas with colored, labeled cells
+    - The color palette legend
+    - The export panel
+  </Step>
+
+  <Step title="Review the pattern">
+    Use the interactive canvas to inspect your pattern:
+
+    - **Scroll** to zoom in and out toward the cursor.
+    - **Click and drag** (in **🖐 Mover** mode) to pan around.
+    - Click **Ajustar vista** to fit the full pattern back in view.
+
+    Zoom in far enough and letter symbols (A, B, C…) appear on each cell — these are the labels you follow when crafting.
+  </Step>
+
+  <Step title="Edit individual cells (optional)">
+    Click **✏️ Lápiz** to switch to the pencil tool. Select a color from the palette swatches that appear in the toolbar, then click or drag on cells to repaint them.
+
+    Use **↩** and **↪** to undo and redo strokes.
+
+    <Warning>
+      Clicking **Generate Pattern** again clears all pencil edits and undo history. Make sure you're happy with your settings before doing a final generate.
+    </Warning>
+  </Step>
+
+  <Step title="Export your pattern">
+    The **Exportar Patrón** panel offers six formats:
+
+    | Format | Button label | Best for |
+    |--------|-------------|----------|
+    | PNG image | **Exportar PNG** | Printing, sharing |
+    | Excel workbook | **Exportar Excel** | Working in Excel |
+    | Colored Excel | **Excel con color** | Visual reference in Excel |
+    | CSV | **Exportar CSV** | Google Sheets import |
+    | Google Sheets (colored) | **Google Sheets con color** | Collaborative crafting |
+    | HTML with color | **HTML con color** | Offline browser reference |
+
+    Click any button to download the file immediately.
+  </Step>
+</Steps>
 
 ## Next steps
 
-Now that you have your docs running, explore these key features:
-
 <CardGroup cols={2}>
-
-<Card title="Write Content" icon="pen-to-square" href="/essentials/markdown">
-  Learn MDX syntax and start writing your documentation.
-</Card>
-
-<Card title="Customize style" icon="palette" href="/essentials/settings">
-  Make your docs match your brand perfectly.
-</Card>
-
-<Card title="Add code examples" icon="square-code" href="/essentials/code">
-  Include syntax-highlighted code blocks.
-</Card>
-
-<Card title="API documentation" icon="code" href="/api-reference/introduction">
-  Auto-generate API docs from OpenAPI specs.
-</Card>
-
+  <Card title="Configuring the matrix" icon="table-cells" href="/using-the-app/configuring-the-matrix">
+    Learn how grid size affects pattern complexity and palette size.
+  </Card>
+  <Card title="Color filters" icon="palette" href="/using-the-app/color-filters">
+    Use color similarity and alpha thresholds to simplify your palette.
+  </Card>
+  <Card title="Editing patterns" icon="pencil" href="/working-with-patterns/editing-patterns">
+    Repaint cells with the pencil tool and manage your edit history.
+  </Card>
+  <Card title="Export formats" icon="file-export" href="/exporting/export-formats">
+    Detailed comparison of all six export formats.
+  </Card>
 </CardGroup>
-
-<Note>
-  **Need help?** See our [full documentation](https://mintlify.com/docs) or join our [community](https://mintlify.com/community).
-</Note>

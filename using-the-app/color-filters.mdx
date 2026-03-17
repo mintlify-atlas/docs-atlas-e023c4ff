@@ -1,0 +1,71 @@
+---
+title: 'Color filters'
+description: 'Use the color similarity and alpha threshold sliders to simplify your palette and handle transparency.'
+keywords: ['color threshold', 'alpha threshold', 'palette', 'transparency', 'RGB distance', 'color merging']
+---
+
+The **Color Filters** section of the configuration panel contains two sliders that shape the palette produced when you generate a pattern. Neither filter takes effect automatically — you must click **Generate Pattern** to apply any changes you make.
+
+<Note>
+Color filters only take effect when you click **Generate Pattern**. Moving the sliders does not re-generate the pattern in real time. Adjust both sliders first, then generate.
+</Note>
+
+## Color similarity threshold (0–50%)
+
+The **Color similarity threshold** slider merges palette colors that are close to one another in RGB color space. The range is 0–50%, and the default is **0%** (no merging).
+
+### How the distance is measured
+
+The app computes the Euclidean distance between two colors in three-dimensional RGB space:
+
+```text
+distance = sqrt((r1 − r2)² + (g1 − g2)² + (b1 − b2)²)
+```
+
+The maximum possible distance — between pure black `(0, 0, 0)` and pure white `(255, 255, 255)` — is approximately **441.67**. The threshold percentage is relative to this maximum, so a 10% threshold corresponds to an absolute distance of about 44.17 RGB units.
+
+### Merging algorithm
+
+The app uses a greedy nearest-representative pass over the palette:
+
+1. Colors are processed in the order they appear in the palette.
+2. Each color is compared to every color already chosen as a representative.
+3. If the distance to the nearest representative is less than or equal to the threshold, the color is merged into that representative.
+4. Otherwise, the color becomes a new representative.
+
+### Threshold values in practice
+
+| Threshold | Effect |
+|---|---|
+| **0%** | No merging. Every unique averaged cell color appears as a separate palette entry. |
+| **~5–10%** | Subtle merging. Very similar colors — slightly different blues, near-identical beiges — collapse into one. |
+| **~20–30%** | Moderate merging. Gradients flatten noticeably; shadow and highlight variants of the same hue often merge. |
+| **~50%** | Aggressive merging. Only broadly different colors remain distinct; the palette may shrink to a handful of entries. |
+
+### When to use it
+
+The color similarity threshold is almost always useful for photographs, which typically contain hundreds of slightly different color values from gradients, noise, and JPEG compression. For flat-color pixel art, where each averaged cell already has a distinct intended color, the threshold is less likely to help and may merge intentionally different colors.
+
+## Alpha threshold (0–100%)
+
+The **Alpha threshold** slider controls which pixels are included when the app calculates the average color for each cell. The range is 0–100%, and the default is **0%** (all pixels included).
+
+### How it works
+
+Each pixel in the image has an alpha value between 0 (fully transparent) and 255 (fully opaque). The alpha threshold — expressed as a percentage of 255 — sets the minimum alpha a pixel must have to be counted:
+
+| Threshold | Pixels included |
+|---|---|
+| **0%** | All pixels, including fully transparent ones |
+| **50%** | Only pixels with alpha > 127 (more than half opaque) |
+| **100%** | Only fully opaque pixels (alpha = 255) |
+
+If every pixel in a cell falls below the threshold, that cell is treated as transparent and rendered as a checkerboard pattern in the preview — indicating no color is assigned.
+
+### When to use it
+
+The alpha threshold is most useful for PNG images with soft, anti-aliased edges or feathered masks. Without a threshold, the semi-transparent fringe pixels around a subject blend into the average, creating unexpected pale or washed-out colors at the edges of the pattern. Raising the threshold to around 50% ignores those fringe pixels and produces cleaner edge cells.
+
+<Tip>
+For photos with a transparent background, combine both thresholds for the cleanest results: set the **Alpha threshold** to around 50% to exclude fringe pixels, then set the **Color similarity threshold** to 5–15% to consolidate the remaining edge colors into the main palette. Generate the pattern and adjust from there.
+</Tip>
